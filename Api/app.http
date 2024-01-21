@@ -1,0 +1,5 @@
+http://localhost:5242/odata
+http://localhost:5242/odata/$metadata
+
+http://localhost:5242/odata/product
+http://localhost:5242/odata/customer

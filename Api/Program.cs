@@ -8,17 +8,22 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var services = builder.Services;
 
-services.AddControllers();
-services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+var edmModelBuilder = new ODataConventionModelBuilder();
+edmModelBuilder.EnableLowerCamelCase();
+edmModelBuilder.Namespace = "ODataSample";
+edmModelBuilder.ContainerName = "ODataSample";
+edmModelBuilder.EntitySet<Product>("Product");
+edmModelBuilder.EntitySet<Customer>("Customer");
+edmModelBuilder.EntitySet<Order>("Order");
 
-services.ConfigureAll<HttpClientFactoryOptions>(options =>
+services.AddControllers().AddOData(options =>
 {
-  options.HttpMessageHandlerBuilderActions.Add(builder =>
-  {
-    builder.AdditionalHandlers.Add(builder.Services.GetRequiredService<PerformanceRequestHandler>());
-  });
+  options
+    .Select().Filter().OrderBy()
+    .Expand().Count().SetMaxTop(null)
+    .AddRouteComponents("odata", edmModelBuilder.GetEdmModel());
 });
+services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddHttpClient();
 services.AddSerilog();
