@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    container_name: api
+    hostname: api
+    environment:
+      - Serilog__Seq__Url=http://seq:80
+    ports:
+      - 7000:80
+
+  seq:
+    image: datalust/seq
+    container_name: seq
+    hostname: seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:80
