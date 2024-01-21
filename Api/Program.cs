@@ -1,6 +1,7 @@
-using Api;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Http;
+using Api.Models;
+using Api.Store;
+using Microsoft.AspNetCore.OData;
+using Microsoft.OData.ModelBuilder;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,7 @@ services.ConfigureAll<HttpClientFactoryOptions>(options =>
 services.AddSwaggerGen();
 services.AddHttpClient();
 services.AddSerilog();
+services.AddScoped<IDataStore, DataStore>();
 
 var serilogConfiguration = configuration.GetSection("Serilog");
 Log.Logger = new LoggerConfiguration()
