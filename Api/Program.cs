@@ -18,7 +18,7 @@ services.ConfigureAll<HttpClientFactoryOptions>(options =>
     builder.AdditionalHandlers.Add(builder.Services.GetRequiredService<PerformanceRequestHandler>());
   });
 });
-services.AddScoped<PerformanceRequestHandler>();
+services.AddSwaggerGen();
 services.AddHttpClient();
 services.AddSerilog();
 
@@ -43,12 +43,6 @@ try
   app.UseSerilogRequestLogging();
   app.UseAuthorization();
   app.MapControllers();
-  app.MapGet("/api/test", async ([FromServices] IHttpClientFactory httpClientFactory) =>
-  {
-    var client = httpClientFactory.CreateClient();
-    await client.GetAsync("https://google.com");
-    return Results.Ok();
-  });
   app.Run();
 }
 catch(Exception e)
